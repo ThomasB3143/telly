@@ -4,6 +4,10 @@ set -euo pipefail
 # Get directory of script
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
+# Make directory for state if none
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/telly"
+mkdir -p "$STATE_DIR"
+
 # Development or installed paths
 if [[ -d "$SCRIPT_DIR/lib" ]]; then
     # Running from project directory
@@ -20,6 +24,9 @@ source "$TELLY_ROOT/lib/utils.sh"
 source "$TELLY_ROOT/lib/launcher.sh"
 source "$TELLY_ROOT/lib/options.sh"
 source "$TELLY_ROOT/lib/state.sh"
+source "$TELLY_ROOT/lib/timer.sh"
+source "$TELLY_ROOT/lib/config.sh"
+source "$TELLY_ROOT/lib/dunst.sh"
 
 cmd="${1:-}"
 
@@ -31,23 +38,28 @@ case "$cmd" in
         # Get launcher directory and contents
         launcher_dir="$(find_launcher "$launcher")"
         options=($(get_options "$launcher_dir"))
+        load_launcher_config "$launcher_dir"
         echo "Running launcher: $launcher"
 
         # Get state file and state
         state_file="$(state_file_for "$launcher")"
-        now="$(date +%s)"
         load_state "$state_file"
+        # Stop current timer
+        stop_timer "$launcher"
 
         # Cycle
         if (( LAST_TS > 0 )); then
             INDEX="$(next_index "$INDEX" "${#options[@]}")"
         fi
-
         # Save the new state
+        now="$(date +%s)"
         save_state "$state_file" "$INDEX" "$now"
+        
+        # Show notification and store ID
+        nid="$(show_menu_notification "$launcher" "${options[$INDEX]}")"
+        echo "$nid" >"$(notification_id_file "$launcher")"
 
-        echo "Selected option:"
-        echo "  ${options[$INDEX]}"
+        start_timer "$launcher" "$TIMEOUT_MS" "${options[$INDEX]}"
         ;;
     list)
         echo "Not implemented"
