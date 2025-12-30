@@ -11,6 +11,7 @@ load_launcher_config() {
     TITLE="${launcher_dir}"
     SELECTED_TEXT=$OPTIONS
 
+
     # Source launcher.conf if exists
     if [[ -f "$config_file" ]]; then
         source "$config_file"

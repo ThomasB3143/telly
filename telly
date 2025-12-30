@@ -66,7 +66,6 @@ case "$cmd" in
         done
         # Remove trailing newline
         menu_text="${menu_text%$'\n'}"
-
         # Show notification and store ID
         nid="$(show_menu_notification "$launcher" "$menu_text" "$INDEX")"
 

@@ -12,7 +12,7 @@ start_timer() {
         execute_option "$option"
         clear_timer "$(state_file_for "$launcher")" "$INDEX"
         close_menu_notification "$launcher"
-        show_menu_notification "$launcher" "${SELECTED_TEXT[$INDEX]}"
+        show_selected_notification "$launcher" "$INDEX"
         rm -f "$pid_file"
     ) &
     
