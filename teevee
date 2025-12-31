@@ -22,7 +22,6 @@ TEEVEE_USER_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/teevee"
 # Load libraries
 source "$TEEVEE_ROOT/lib/utils.sh"
 source "$TEEVEE_ROOT/lib/launcher.sh"
-source "$TEEVEE_ROOT/lib/options.sh"
 source "$TEEVEE_ROOT/lib/state.sh"
 source "$TEEVEE_ROOT/lib/timer.sh"
 source "$TEEVEE_ROOT/lib/config.sh"
@@ -71,8 +70,10 @@ case "$cmd" in
 
         # Get launcher directory and contents
         launcher_dir="$(find_launcher "$launcher")"
-        options=($(get_options "$launcher_dir"))
         load_launcher_config "$launcher_dir"
+
+        # REPLACED WITH OPTION_ORDER
+        # options=($(get_options "$launcher_dir"))
         echo "Running launcher: $launcher"
 
         # Get state file and state
@@ -83,7 +84,7 @@ case "$cmd" in
 
         # Cycle
         if (( LAST_TS > 0 )); then
-            INDEX="$(next_index "$INDEX" "${#options[@]}")"
+            INDEX="$(next_index "$INDEX" "${#OPTION_ORDER[@]}")"
         fi
         # Save the new state
         now="$(date +%s)"
@@ -105,7 +106,7 @@ case "$cmd" in
 
         echo "$nid" >"$(notification_id_file "$launcher")"
 
-        start_timer "$launcher" "$TIMEOUT_MS" "${options[$INDEX]}"
+        start_timer "$launcher" "$TIMEOUT_MS" "${OPTION_ORDER[$INDEX]}"
         ;;
     list)
         list_launchers

@@ -37,6 +37,9 @@ validate_launcher() {
 
     (( ${#opts[@]} > 0 )) \
         || die "launcher has no option scripts: $dir"
+
+    # Check if the launcher.conf is valid
+    validate_config "$dir"
 }
 
 list_launchers() {

@@ -5,6 +5,15 @@ die() {
     echo "teevee: $*" >&2
     exit 1
 }
+
+check_array_len() {
+    local name="$1"
+    declare -n arr="$name"
+
+    [[ "${#arr[@]}" -eq "$num_options" ]] \
+        || die "$name must have exactly $num_options elements (has ${#arr[@]})"
+}
+
 print_help() {
     cat <<EOF
 teevee — single-button cyclic launcher

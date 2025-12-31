@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+execute_option() {
+    # Append filepath
+    local option="${launcher_dir}/options/${1}"
+
+    if [[ ! -x "$option" ]]; then
+        echo "teevee: option not executable $option" >&2
+        return 1
+    fi
+
+    "$option" &
+}
+
 start_timer() {
     local launcher="$1"
     local timeout_ms="$2"
@@ -9,7 +21,7 @@ start_timer() {
 
     (
         sleep "$(ms_to_seconds "$timeout_ms")"
-        execute_option "$option"
+        execute_option "${option}"
         clear_timer "$(state_file_for "$launcher")" "$INDEX"
         close_menu_notification "$launcher"
         show_selected_notification "$launcher" "$INDEX"
