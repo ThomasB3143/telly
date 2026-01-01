@@ -31,7 +31,9 @@ Now you can repeat steps 2-6 for as many launchers as you'd like!
 
 ## Additional operations
 
-- teevee list: lists all launcher directories found in .config/teevee
+- teevee -h/--help: Provides a comprehensive help guide
+- teevee list: Lists all launcher directories found in .config/teevee
+- teevee -V/--valid <launcher_name>: Checks validity of a launcher and lists errors
 
 ## Launcher ideas
 
