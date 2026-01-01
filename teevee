@@ -112,12 +112,12 @@ case "$cmd" in
         ;;
     init)
         shift
-        # Instantiate .config/teevee directory
-        create_config
-        if [[ $# == 1 ]]; then
-            # Create a launcher if the user specifies
-            create_launcher "$1"
-        fi
+
+        # Create a launcher if additional argument is passed
+        # Otherwise just create .config/teevee/ dir
+        [[ $# == 1 ]] && create_launcher "$1" \
+            || create_config
+
         ;;
     *)
         echo "Usage: teevee run <launcher>"

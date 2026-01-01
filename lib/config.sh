@@ -33,10 +33,8 @@ load_launcher_config() {
 
 create_config() {
     local config_dir="$TEEVEE_USER_CONFIG"
-
-    mkdir -p "$config_dir"
-
-    echo "Initialised config directory at $config_dir"
+    [[ -d $config_dir ]] && die "Config directory already exists at $config_dir " \
+        || ( mkdir -p "$config_dir" && echo "Initialised config directory at $config_dir")
 }
 
 validate_config() {

@@ -69,6 +69,9 @@ create_launcher() {
     local conf="$dir/launcher.conf"
     local opts="$dir/options"
 
+    # Check if .config/teevee/ exists
+    [[ -d "$TEEVEE_USER_CONFIG" ]] || (mkdir -p "$TEEVEE_USER_CONFIG" && echo "Initialised config directory at $TEEVEE_USER_CONFIG")
+
     # Refuse to overwrite a complete launcher
     if [[ -d "$dir" && -f "$conf" && -d "$opts" ]]; then
         die "Launcher $name already exists at $dir"
